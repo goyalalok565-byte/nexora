@@ -4,88 +4,87 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>NEXORA - All-in-One Daily Tools Platform</title>
-    <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col justify-between selection:bg-blue-500 selection:text-white">
 
-    <!-- Header / Navbar -->
+    <!-- Header -->
     <header class="w-full border-b border-slate-900 px-6 py-4 flex justify-between items-center bg-slate-950/80 backdrop-blur sticky top-0 z-50">
         <div class="flex items-center space-x-2">
-            <span class="text-xl font-black bg-gradient-to-r from-blue-400 to-indigo-500 bg-clip-text text-transparent">NEXORA</span>
+            <a href="#" onclick="goHome()" class="text-xl font-black bg-gradient-to-r from-blue-400 to-indigo-500 bg-clip-text text-transparent">NEXORA</a>
         </div>
         <div class="text-xs text-slate-400 bg-slate-900 px-3 py-1.5 rounded-full border border-slate-800">
-            ⚡ Instant & Free
+            ⚡ Live & Interactive
         </div>
     </header>
 
-    <!-- Main Hero & Universal Search Section -->
+    <!-- Main Container -->
     <main class="max-w-3xl w-full mx-auto px-4 py-12 flex-grow flex flex-col items-center justify-center text-center">
-        <h1 class="text-4xl md:text-6xl font-extrabold tracking-tight mb-4 bg-gradient-to-r from-blue-400 via-indigo-300 to-indigo-500 bg-clip-text text-transparent">
-            Mere saare daily kaam ek hi jagah.
-        </h1>
-        <p class="text-slate-400 mb-8 text-sm md:text-base max-w-lg">
-            Instant PDF tools, calculators, converters, and smart utilities—no login required.
-        </p>
+        
+        <!-- Home View -->
+        <div id="homeView" class="w-full flex flex-col items-center">
+            <h1 class="text-4xl md:text-6xl font-extrabold tracking-tight mb-4 bg-gradient-to-r from-blue-400 via-indigo-300 to-indigo-500 bg-clip-text text-transparent">
+                Mere saare daily kaam ek hi jagah.
+            </h1>
+            <p class="text-slate-400 mb-8 text-sm md:text-base max-w-lg">
+                Instant calculators and smart utilities—no login required, lightning fast.
+            </p>
 
-        <!-- Universal Search Bar (ChatGPT Style) -->
-        <div class="relative w-full shadow-2xl">
-            <input 
-                type="text" 
-                id="searchBox" 
-                placeholder="Search any tool (e.g., pdf, loan, tax, resize, gst)..." 
-                class="w-full px-6 py-4 bg-slate-900 border border-slate-800 rounded-2xl text-slate-100 placeholder-slate-500 focus:outline-none focus:border-blue-500 text-sm md:text-base transition-all"
-                onkeyup="filterTools()"
-                autofocus
-            >
-        </div>
+            <!-- Universal Search Bar -->
+            <div class="relative w-full shadow-2xl">
+                <input 
+                    type="text" 
+                    id="searchBox" 
+                    placeholder="Search any tool (e.g., emi, gst, age, tax)..." 
+                    class="w-full px-6 py-4 bg-slate-900 border border-slate-800 rounded-2xl text-slate-100 placeholder-slate-500 focus:outline-none focus:border-blue-500 text-sm md:text-base transition-all"
+                    onkeyup="filterTools()"
+                >
+            </div>
 
-        <!-- Dynamic Search Results -->
-        <div id="resultsBox" class="w-full mt-4 text-left grid grid-cols-1 gap-2"></div>
+            <!-- Dynamic Search Results -->
+            <div id="resultsBox" class="w-full mt-4 text-left grid grid-cols-1 gap-2"></div>
 
-        <!-- Popular Categories Tags -->
-        <div class="flex flex-wrap justify-center gap-2 mt-8">
-            <button onclick="quickSearch('pdf')" class="px-3 py-1.5 bg-slate-900 hover:bg-slate-800 border border-slate-800 rounded-full text-xs text-slate-300 transition-all">📄 PDF Tools</button>
-            <button onclick="quickSearch('image')" class="px-3 py-1.5 bg-slate-900 hover:bg-slate-800 border border-slate-800 rounded-full text-xs text-slate-300 transition-all">🖼️ Image Tools</button>
-            <button onclick="quickSearch('finance')" class="px-3 py-1.5 bg-slate-900 hover:bg-slate-800 border border-slate-800 rounded-full text-xs text-slate-300 transition-all">💰 Finance & Tax</button>
-            <button onclick="quickSearch('calculator')" class="px-3 py-1.5 bg-slate-900 hover:bg-slate-800 border border-slate-800 rounded-full text-xs text-slate-300 transition-all">🧮 Calculators</button>
-        </div>
+            <!-- Popular Categories -->
+            <div class="flex flex-wrap justify-center gap-2 mt-8">
+                <button onclick="quickSearch('finance')" class="px-3 py-1.5 bg-slate-900 hover:bg-slate-800 border border-slate-800 rounded-full text-xs text-slate-300 transition-all">💰 Finance</button>
+                <button onclick="quickSearch('calculator')" class="px-3 py-1.5 bg-slate-900 hover:bg-slate-800 border border-slate-800 rounded-full text-xs text-slate-300 transition-all">🧮 Calculators</button>
+            </div>
 
-        <!-- Tools Grid Showcase -->
-        <div class="w-full mt-16 text-left">
-            <h2 class="text-lg font-semibold text-slate-300 mb-4">Trending Daily Tools</h2>
-            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3" id="toolsGrid">
-                <!-- Dynamically populated or static cards -->
+            <!-- Tools Grid -->
+            <div class="w-full mt-16 text-left">
+                <h2 class="text-lg font-semibold text-slate-300 mb-4">Available Interactive Tools</h2>
+                <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3" id="toolsGrid"></div>
             </div>
         </div>
+
+        <!-- Tool Workspace View (Dynamic Container) -->
+        <div id="workspaceView" class="w-full hidden text-left bg-slate-900/40 border border-slate-800 p-6 md:p-8 rounded-3xl">
+            <button onclick="goHome()" class="mb-6 px-4 py-2 bg-slate-800 hover:bg-slate-700 text-xs rounded-xl text-slate-300 transition-all">&larr; Back to Tools</button>
+            <div id="toolContent"></div>
+        </div>
+
     </main>
 
     <!-- Footer -->
     <footer class="py-6 text-center text-xs text-slate-500 border-t border-slate-900">
-        &copy; 2026 NEXORA &bull; Built for the World &bull; Fast, Lightweight & Secure.
+        &copy; 2026 NEXORA &bull; Built for the World &bull; Fast & Secure.
     </footer>
 
     <!-- App Logic Script -->
     <script>
         const toolsDatabase = [
-            { name: "Compress PDF", category: "PDF", desc: "Reduce PDF file size online", url: "#" },
-            { name: "Merge PDF", category: "PDF", desc: "Combine multiple PDFs into one", url: "#" },
-            { name: "Split PDF", category: "PDF", desc: "Extract pages from your PDF", url: "#" },
-            { name: "Loan EMI Calculator", category: "Finance", desc: "Calculate monthly loan payments", url: "#" },
-            { name: "US Tax Calculator", category: "Finance", desc: "Estimate federal and state taxes", url: "#" },
-            { name: "Passport Photo Resizer", category: "Image", desc: "Resize photos for official documents", url: "#" },
-            { name: "PNG to JPG Converter", category: "Image", desc: "Convert image formats instantly", url: "#" },
-            { name: "GST Calculator", category: "Calculator", desc: "Calculate GST and net amounts", url: "#" },
-            { name: "Age Calculator", category: "Calculator", desc: "Calculate exact age and intervals", url: "#" }
+            { id: "emi", name: "Loan EMI Calculator", category: "Finance", desc: "Calculate monthly loan payments & interest" },
+            { id: "gst", name: "GST Calculator", category: "Finance", desc: "Calculate GST amount and net price instantly" },
+            { id: "age", name: "Age Calculator", category: "Calculator", desc: "Calculate exact age in years, months, and days" }
         ];
 
         function renderGrid(data) {
             let grid = document.getElementById('toolsGrid');
             grid.innerHTML = "";
             data.forEach(tool => {
-                let card = document.createElement('a');
-                card.href = tool.url;
-                card.className = "p-4 bg-slate-900/60 hover:bg-slate-900 border border-slate-800/80 rounded-2xl transition-all block group";
+                let card = document.createElement('div');
+                card.onclick = () => openTool(tool.id);
+                card.className = "p-4 bg-slate-900/60 hover:bg-slate-900 border border-slate-800/80 rounded-2xl transition-all cursor-pointer group";
                 card.innerHTML = `
                     <div class="flex justify-between items-start mb-2">
                         <span class="text-sm font-medium text-slate-200 group-hover:text-blue-400 transition-colors">${tool.name}</span>
@@ -112,18 +111,6 @@
             );
 
             renderGrid(filtered);
-
-            if (filtered.length > 0) {
-                filtered.forEach(tool => {
-                    let item = document.createElement('a');
-                    item.href = tool.url;
-                    item.className = "block p-3 bg-slate-900 hover:bg-slate-800 border border-slate-800 rounded-xl text-slate-200 transition-all text-sm flex justify-between items-center";
-                    item.innerHTML = `<span>${tool.name}</span> <span class="text-xs text-blue-400 bg-blue-950 px-2 py-0.5 rounded">${tool.category}</span>`;
-                    resultsBox.appendChild(item);
-                });
-            } else {
-                resultsBox.innerHTML = '<div class="p-3 text-slate-500 text-sm text-center">No tool found matching "' + input + '"</div>';
-            }
         }
 
         function quickSearch(keyword) {
@@ -131,7 +118,148 @@
             filterTools();
         }
 
-        // Initial render
+        function goHome() {
+            document.getElementById('homeView').classList.remove('hidden');
+            document.getElementById('workspaceView').classList.add('hidden');
+            renderGrid(toolsDatabase);
+        }
+
+        function openTool(id) {
+            document.getElementById('homeView').classList.add('hidden');
+            document.getElementById('workspaceView').classList.remove('hidden');
+            let content = document.getElementById('toolContent');
+
+            if (id === 'emi') {
+                content.innerHTML = `
+                    <h2 class="text-2xl font-bold text-slate-100 mb-2">Loan EMI Calculator</h2>
+                    <p class="text-xs text-slate-400 mb-6">Calculate your monthly loan installments easily.</p>
+                    <div class="space-y-4 max-w-lg">
+                        <div>
+                            <label class="block text-xs text-slate-400 mb-1">Loan Amount (₹)</label>
+                            <input type="number" id="emiLoan" value="500000" class="w-full p-3 bg-slate-950 border border-slate-800 rounded-xl text-slate-100 focus:outline-none focus:border-blue-500 text-sm">
+                        </div>
+                        <div>
+                            <label class="block text-xs text-slate-400 mb-1">Interest Rate (% P.A.)</label>
+                            <input type="number" id="emiRate" value="8.5" class="w-full p-3 bg-slate-950 border border-slate-800 rounded-xl text-slate-100 focus:outline-none focus:border-blue-500 text-sm">
+                        </div>
+                        <div>
+                            <label class="block text-xs text-slate-400 mb-1">Loan Tenure (Years)</label>
+                            <input type="number" id="emiYears" value="5" class="w-full p-3 bg-slate-950 border border-slate-800 rounded-xl text-slate-100 focus:outline-none focus:border-blue-500 text-sm">
+                        </div>
+                        <button onclick="calculateEMI()" class="w-full py-3 bg-blue-600 hover:bg-blue-500 text-white rounded-xl font-medium transition-all text-sm">Calculate EMI</button>
+                        <div id="emiResult" class="mt-4 p-4 bg-slate-950 border border-slate-800 rounded-xl text-sm hidden"></div>
+                    </div>
+                `;
+            } else if (id === 'gst') {
+                content.innerHTML = `
+                    <h2 class="text-2xl font-bold text-slate-100 mb-2">GST Calculator</h2>
+                    <p class="text-xs text-slate-400 mb-6">Calculate GST inclusive and exclusive amounts.</p>
+                    <div class="space-y-4 max-w-lg">
+                        <div>
+                            <label class="block text-xs text-slate-400 mb-1">Initial Amount (₹)</label>
+                            <input type="number" id="gstAmount" value="1000" class="w-full p-3 bg-slate-950 border border-slate-800 rounded-xl text-slate-100 focus:outline-none focus:border-blue-500 text-sm">
+                        </div>
+                        <div>
+                            <label class="block text-xs text-slate-400 mb-1">GST Rate (%)</label>
+                            <input type="number" id="gstRate" value="18" class="w-full p-3 bg-slate-950 border border-slate-800 rounded-xl text-slate-100 focus:outline-none focus:border-blue-500 text-sm">
+                        </div>
+                        <button onclick="calculateGST()" class="w-full py-3 bg-blue-600 hover:bg-blue-500 text-white rounded-xl font-medium transition-all text-sm">Calculate GST</button>
+                        <div id="gstResult" class="mt-4 p-4 bg-slate-950 border border-slate-800 rounded-xl text-sm hidden"></div>
+                    </div>
+                `;
+            } else if (id === 'age') {
+                content.innerHTML = `
+                    <h2 class="text-2xl font-bold text-slate-100 mb-2">Age Calculator</h2>
+                    <p class="text-xs text-slate-400 mb-6">Find your exact age from date of birth.</p>
+                    <div class="space-y-4 max-w-lg">
+                        <div>
+                            <label class="block text-xs text-slate-400 mb-1">Date of Birth</label>
+                            <input type="date" id="dobInput" class="w-full p-3 bg-slate-950 border border-slate-800 rounded-xl text-slate-100 focus:outline-none focus:border-blue-500 text-sm">
+                        </div>
+                        <button onclick="calculateAge()" class="w-full py-3 bg-blue-600 hover:bg-blue-500 text-white rounded-xl font-medium transition-all text-sm">Calculate Age</button>
+                        <div id="ageResult" class="mt-4 p-4 bg-slate-950 border border-slate-800 rounded-xl text-sm hidden"></div>
+                    </div>
+                `;
+            }
+        }
+
+        function calculateEMI() {
+            let p = parseFloat(document.getElementById('emiLoan').value);
+            let r = parseFloat(document.getElementById('emiRate').value) / 12 / 100;
+            let n = parseFloat(document.getElementById('emiYears').value) * 12;
+            let resBox = document.getElementById('emiResult');
+
+            if (isNaN(p) || isNaN(r) || isNaN(n)) {
+                resBox.innerHTML = "Please enter valid numbers.";
+                resBox.classList.remove('hidden');
+                return;
+            }
+
+            let emi = (p * r * Math.pow(1 + r, n)) / (Math.pow(1 + r, n) - 1);
+            let totalPay = emi * n;
+            let totalInt = totalPay - p;
+
+            resBox.innerHTML = `
+                <div class="space-y-1 text-slate-300">
+                    <div>Monthly EMI: <strong class="text-blue-400">₹${emi.toFixed(2)}</strong></div>
+                    <div>Total Interest: <strong class="text-slate-100">₹${totalInt.toFixed(2)}</strong></div>
+                    <div>Total Payment: <strong class="text-slate-100">₹${totalPay.toFixed(2)}</strong></div>
+                </div>
+            `;
+            resBox.classList.remove('hidden');
+        }
+
+        function calculateGST() {
+            let amount = parseFloat(document.getElementById('gstAmount').value);
+            let rate = parseFloat(document.getElementById('gstRate').value);
+            let resBox = document.getElementById('gstResult');
+
+            if (isNaN(amount) || isNaN(rate)) {
+                resBox.innerHTML = "Please enter valid numbers.";
+                resBox.classList.remove('hidden');
+                return;
+            }
+
+            let gstAmount = (amount * rate) / 100;
+            let totalAmount = amount + gstAmount;
+
+            resBox.innerHTML = `
+                <div class="space-y-1 text-slate-300">
+                    <div>GST Amount: <strong class="text-blue-400">₹${gstAmount.toFixed(2)}</strong></div>
+                    <div>Total Amount (Inc. GST): <strong class="text-slate-100">₹${totalAmount.toFixed(2)}</strong></div>
+                </div>
+            `;
+            resBox.classList.remove('hidden');
+        }
+
+        function calculateAge() {
+            let dob = new Date(document.getElementById('dobInput').value);
+            let resBox = document.getElementById('ageResult');
+            let today = new Date();
+
+            if (isNaN(dob.getTime())) {
+                resBox.innerHTML = "Please select a valid date.";
+                resBox.classList.remove('hidden');
+                return;
+            }
+
+            let years = today.getFullYear() - dob.getFullYear();
+            let months = today.getMonth() - dob.getMonth();
+            let days = today.getDate() - dob.getDate();
+
+            if (days < 0) {
+                months--;
+                days += new Date(today.getFullYear(), today.getMonth(), 0).getDate();
+            }
+            if (months < 0) {
+                years--;
+                months += 12;
+            }
+
+            resBox.innerHTML = `<strong class="text-blue-400">${years} Years, ${months} Months, and ${days} Days</strong> old`;
+            resBox.classList.remove('hidden');
+        }
+
         renderGrid(toolsDatabase);
     </script>
 </body>
