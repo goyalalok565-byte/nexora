@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NEXORA - All-in-One Daily Tools Platform</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col justify-between selection:bg-blue-500 selection:text-white">
+
+    <!-- Header / Navbar -->
+    <header class="w-full border-b border-slate-900 px-6 py-4 flex justify-between items-center bg-slate-950/80 backdrop-blur sticky top-0 z-50">
+        <div class="flex items-center space-x-2">
+            <span class="text-xl font-black bg-gradient-to-r from-blue-400 to-indigo-500 bg-clip-text text-transparent">NEXORA</span>
+        </div>
+        <div class="text-xs text-slate-400 bg-slate-900 px-3 py-1.5 rounded-full border border-slate-800">
+            ⚡ Instant & Free
+        </div>
+    </header>
+
+    <!-- Main Hero & Universal Search Section -->
+    <main class="max-w-3xl w-full mx-auto px-4 py-12 flex-grow flex flex-col items-center justify-center text-center">
+        <h1 class="text-4xl md:text-6xl font-extrabold tracking-tight mb-4 bg-gradient-to-r from-blue-400 via-indigo-300 to-indigo-500 bg-clip-text text-transparent">
+            Mere saare daily kaam ek hi jagah.
+        </h1>
+        <p class="text-slate-400 mb-8 text-sm md:text-base max-w-lg">
+            Instant PDF tools, calculators, converters, and smart utilities—no login required.
+        </p>
+
+        <!-- Universal Search Bar (ChatGPT Style) -->
+        <div class="relative w-full shadow-2xl">
+            <input 
+                type="text" 
+                id="searchBox" 
+                placeholder="Search any tool (e.g., pdf, loan, tax, resize, gst)..." 
+                class="w-full px-6 py-4 bg-slate-900 border border-slate-800 rounded-2xl text-slate-100 placeholder-slate-500 focus:outline-none focus:border-blue-500 text-sm md:text-base transition-all"
+                onkeyup="filterTools()"
+                autofocus
+            >
+        </div>
+
+        <!-- Dynamic Search Results -->
+        <div id="resultsBox" class="w-full mt-4 text-left grid grid-cols-1 gap-2"></div>
+
+        <!-- Popular Categories Tags -->
+        <div class="flex flex-wrap justify-center gap-2 mt-8">
+            <button onclick="quickSearch('pdf')" class="px-3 py-1.5 bg-slate-900 hover:bg-slate-800 border border-slate-800 rounded-full text-xs text-slate-300 transition-all">📄 PDF Tools</button>
+            <button onclick="quickSearch('image')" class="px-3 py-1.5 bg-slate-900 hover:bg-slate-800 border border-slate-800 rounded-full text-xs text-slate-300 transition-all">🖼️ Image Tools</button>
+            <button onclick="quickSearch('finance')" class="px-3 py-1.5 bg-slate-900 hover:bg-slate-800 border border-slate-800 rounded-full text-xs text-slate-300 transition-all">💰 Finance & Tax</button>
+            <button onclick="quickSearch('calculator')" class="px-3 py-1.5 bg-slate-900 hover:bg-slate-800 border border-slate-800 rounded-full text-xs text-slate-300 transition-all">🧮 Calculators</button>
+        </div>
+
+        <!-- Tools Grid Showcase -->
+        <div class="w-full mt-16 text-left">
+            <h2 class="text-lg font-semibold text-slate-300 mb-4">Trending Daily Tools</h2>
+            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3" id="toolsGrid">
+                <!-- Dynamically populated or static cards -->
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="py-6 text-center text-xs text-slate-500 border-t border-slate-900">
+        &copy; 2026 NEXORA &bull; Built for the World &bull; Fast, Lightweight & Secure.
+    </footer>
+
+    <!-- App Logic Script -->
+    <script>
+        const toolsDatabase = [
+            { name: "Compress PDF", category: "PDF", desc: "Reduce PDF file size online", url: "#" },
+            { name: "Merge PDF", category: "PDF", desc: "Combine multiple PDFs into one", url: "#" },
+            { name: "Split PDF", category: "PDF", desc: "Extract pages from your PDF", url: "#" },
+            { name: "Loan EMI Calculator", category: "Finance", desc: "Calculate monthly loan payments", url: "#" },
+            { name: "US Tax Calculator", category: "Finance", desc: "Estimate federal and state taxes", url: "#" },
+            { name: "Passport Photo Resizer", category: "Image", desc: "Resize photos for official documents", url: "#" },
+            { name: "PNG to JPG Converter", category: "Image", desc: "Convert image formats instantly", url: "#" },
+            { name: "GST Calculator", category: "Calculator", desc: "Calculate GST and net amounts", url: "#" },
+            { name: "Age Calculator", category: "Calculator", desc: "Calculate exact age and intervals", url: "#" }
+        ];
+
+        function renderGrid(data) {
+            let grid = document.getElementById('toolsGrid');
+            grid.innerHTML = "";
+            data.forEach(tool => {
+                let card = document.createElement('a');
+                card.href = tool.url;
+                card.className = "p-4 bg-slate-900/60 hover:bg-slate-900 border border-slate-800/80 rounded-2xl transition-all block group";
+                card.innerHTML = `
+                    <div class="flex justify-between items-start mb-2">
+                        <span class="text-sm font-medium text-slate-200 group-hover:text-blue-400 transition-colors">${tool.name}</span>
+                        <span class="text-[10px] bg-slate-800 text-slate-400 px-2 py-0.5 rounded-full">${tool.category}</span>
+                    </div>
+                    <p class="text-xs text-slate-500">${tool.desc}</p>
+                `;
+                grid.appendChild(card);
+            });
+        }
+
+        function filterTools() {
+            let input = document.getElementById('searchBox').value.toLowerCase();
+            let resultsBox = document.getElementById('resultsBox');
+            resultsBox.innerHTML = "";
+
+            if (input.trim() === "") {
+                renderGrid(toolsDatabase);
+                return;
+            }
+
+            let filtered = toolsDatabase.filter(tool => 
+                tool.name.toLowerCase().includes(input) || tool.category.toLowerCase().includes(input) || tool.desc.toLowerCase().includes(input)
+            );
+
+            renderGrid(filtered);
+
+            if (filtered.length > 0) {
+                filtered.forEach(tool => {
+                    let item = document.createElement('a');
+                    item.href = tool.url;
+                    item.className = "block p-3 bg-slate-900 hover:bg-slate-800 border border-slate-800 rounded-xl text-slate-200 transition-all text-sm flex justify-between items-center";
+                    item.innerHTML = `<span>${tool.name}</span> <span class="text-xs text-blue-400 bg-blue-950 px-2 py-0.5 rounded">${tool.category}</span>`;
+                    resultsBox.appendChild(item);
+                });
+            } else {
+                resultsBox.innerHTML = '<div class="p-3 text-slate-500 text-sm text-center">No tool found matching "' + input + '"</div>';
+            }
+        }
+
+        function quickSearch(keyword) {
+            document.getElementById('searchBox').value = keyword;
+            filterTools();
+        }
+
+        // Initial render
+        renderGrid(toolsDatabase);
+    </script>
+</body>
+</html>
