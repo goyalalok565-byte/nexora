@@ -3,8 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>OmniTransit — Unified Global Mobility Engine</title>
-    <!-- Tailwind CSS Engine -->
+    <title>OmniTransit — Live Mobility Engine</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
@@ -13,14 +12,12 @@
                 extend: {
                     colors: {
                         brand: { 50: '#f0f3ff', 500: '#6366f1', 600: '#4f46e5', 700: '#4338ca', 900: '#312e81' },
-                        darkbg: '#090d16',
-                        cardbg: '#111827'
+                        darkbg: '#090d16'
                     }
                 }
             }
         }
     </script>
-    <!-- FontAwesome Pro Icons & Fonts -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
@@ -32,7 +29,7 @@
 </head>
 <body class="text-slate-100 min-h-screen flex flex-col justify-between selection:bg-brand-500 selection:text-white">
 
-    <!-- Global App Bar -->
+    <!-- Global Header -->
     <header class="sticky top-0 z-50 glass-panel border-b border-slate-800/80 px-4 py-3 flex justify-between items-center">
         <div class="flex items-center gap-3">
             <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-brand-600 to-indigo-400 flex items-center justify-center text-white shadow-lg shadow-brand-500/30">
@@ -41,27 +38,24 @@
             <div>
                 <div class="flex items-center gap-1.5">
                     <h1 class="text-base font-extrabold tracking-tight text-white leading-none">OmniTransit</h1>
-                    <span class="text-[9px] bg-brand-500/20 text-brand-400 font-bold px-1.5 py-0.5 rounded border border-brand-500/30 uppercase">Global</span>
+                    <span class="text-[9px] bg-brand-500/20 text-brand-400 font-bold px-1.5 py-0.5 rounded border border-brand-500/30 uppercase">Global API</span>
                 </div>
-                <p class="text-[10px] text-slate-400 font-medium">Next-Gen Mobility Engine</p>
+                <p class="text-[10px] text-slate-400 font-medium">Unified Mobility Engine</p>
             </div>
         </div>
 
-        <div class="flex items-center gap-2">
-            <!-- Region Selector -->
-            <select id="globalRegion" onchange="switchRegion()" class="bg-slate-900 border border-slate-700/80 text-xs rounded-xl px-2.5 py-1.5 text-slate-200 focus:outline-none focus:border-brand-500 transition-colors">
-                <option value="IN">🇮🇳 India (IR/Metros)</option>
-                <option value="US">🇺🇸 USA (Amtrak/MTA)</option>
-                <option value="UK">🇬🇧 UK (National Rail)</option>
-                <option value="JP">🇯🇵 Japan (JR/Shinkansen)</option>
-            </select>
-        </div>
+        <select id="globalRegion" class="bg-slate-900 border border-slate-700/80 text-xs rounded-xl px-2.5 py-1.5 text-slate-200 focus:outline-none">
+            <option value="IN">🇮🇳 India (IR/Metros)</option>
+            <option value="US">🇺🇸 USA (Amtrak/MTA)</option>
+            <option value="UK">🇬🇧 UK (National Rail)</option>
+            <option value="JP">🇯🇵 Japan (JR/Metro)</option>
+        </select>
     </header>
 
-    <!-- Main Dynamic Workspace -->
+    <!-- Main Content -->
     <main class="p-4 max-w-lg mx-auto w-full flex-grow flex flex-col gap-5">
 
-        <!-- Mode Switcher Tabs -->
+        <!-- Mode Tabs -->
         <section class="glass-panel p-1.5 rounded-2xl grid grid-cols-3 gap-1">
             <button onclick="selectMode('train')" id="tab-train" class="mode-tab bg-brand-600 text-white py-2.5 rounded-xl font-bold text-xs flex items-center justify-center gap-2 transition-all shadow-md">
                 <i class="fa-solid fa-train"></i> Trains
@@ -74,50 +68,45 @@
             </button>
         </section>
 
-        <!-- Search & Discovery Console -->
+        <!-- Search Panel -->
         <section class="glass-panel p-5 rounded-3xl space-y-4">
             <div>
                 <label class="text-[11px] font-bold text-slate-400 uppercase tracking-wider block mb-2" id="searchLabel">Search Global Train Route</label>
                 <div class="relative">
                     <i class="fa-solid fa-magnifying-glass absolute left-4 top-3.5 text-slate-500 text-sm"></i>
-                    <input type="text" id="transitQuery" placeholder="e.g. 12951, Rajdhani, or Station Code" class="w-full bg-slate-950/80 border border-slate-800 rounded-2xl py-3 pl-11 pr-4 text-sm text-white placeholder-slate-600 focus:outline-none focus:border-brand-500 focus:ring-1 focus:ring-brand-500 transition-all">
+                    <input type="text" id="transitQuery" placeholder="e.g. 12951, Rajdhani, or Station" class="w-full bg-slate-950/80 border border-slate-800 rounded-2xl py-3 pl-11 pr-4 text-sm text-white placeholder-slate-600 focus:outline-none focus:border-brand-500">
                 </div>
             </div>
 
-            <button onclick="executeTransitSearch()" class="w-full bg-gradient-to-r from-brand-600 to-brand-500 hover:from-brand-500 hover:to-brand-600 active:scale-[0.98] text-white font-bold py-3.5 rounded-2xl text-sm shadow-xl shadow-brand-500/25 flex justify-center items-center gap-2 transition-all">
-                <i class="fa-solid fa-bolt"></i> Trace Real-Time Status
+            <button onclick="fetchLiveTransitData()" class="w-full bg-gradient-to-r from-brand-600 to-brand-500 hover:from-brand-500 hover:to-brand-600 active:scale-[0.98] text-white font-bold py-3.5 rounded-2xl text-sm shadow-xl shadow-brand-500/25 flex justify-center items-center gap-2 transition-all">
+                <i id="searchIcon" class="fa-solid fa-bolt"></i> <span id="searchText">Trace Real-Time Status</span>
             </button>
         </section>
 
-        <!-- Dynamic Transit Status Dashboard -->
+        <!-- Live Status Dashboard -->
         <section id="statusDashboard" class="hidden space-y-4">
-            
-            <!-- Live Vehicle Card -->
             <div class="glass-panel p-5 rounded-3xl space-y-4 border-l-4 border-l-brand-500">
+                
                 <div class="flex justify-between items-start border-b border-slate-800/80 pb-3">
                     <div>
-                        <div class="flex items-center gap-2">
-                            <h2 id="vehicleTitle" class="font-extrabold text-base text-white">12951 — NDLS TEJAS RAJDHANI</h2>
-                        </div>
-                        <p id="routeSub" class="text-xs text-slate-400 mt-0.5">New Delhi (NDLS) ➔ Mumbai Central (MMCT)</p>
+                        <h2 id="vehicleTitle" class="font-extrabold text-base text-white">Searching...</h2>
+                        <p id="routeSub" class="text-xs text-slate-400 mt-0.5">Live Route Network</p>
                     </div>
                     <span id="delayBadge" class="bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 text-[10px] font-bold px-2.5 py-1 rounded-full flex items-center gap-1">
-                        <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-ping"></span> ON TIME
+                        <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-ping"></span> LIVE SYNC
                     </span>
                 </div>
 
                 <!-- Timeline Monitor -->
                 <div class="space-y-4 text-xs relative pt-1">
-                    
                     <div class="flex items-start gap-3">
                         <div class="w-2.5 h-2.5 rounded-full bg-slate-600 mt-1"></div>
                         <div class="flex-1">
-                            <p class="font-bold text-slate-300">Kota Junction (KOTA)</p>
-                            <p class="text-[11px] text-slate-500">Departed at 03:15 PM • Dep. Delay: +0m</p>
+                            <p class="font-bold text-slate-300" id="prevStation">Previous Station</p>
+                            <p class="text-[11px] text-slate-500" id="prevTime">Departed</p>
                         </div>
                     </div>
 
-                    <!-- Live Active Segment -->
                     <div class="ml-1 pl-5 border-l-2 border-dashed border-brand-500 my-2 py-2">
                         <div class="bg-brand-900/30 border border-brand-500/30 p-3 rounded-2xl flex items-center justify-between text-brand-200 shadow-inner">
                             <div class="flex items-center gap-2.5">
@@ -125,30 +114,29 @@
                                     <span class="w-1.5 h-1.5 bg-white rounded-full"></span>
                                 </span>
                                 <div>
-                                    <p class="font-bold text-white text-xs">Between Kota & Ratlam</p>
-                                    <p class="text-[10px] text-brand-300">Near Nagda Jn • GPS Synchronized</p>
+                                    <p class="font-bold text-white text-xs" id="currentPos">En Route</p>
+                                    <p class="text-[10px] text-brand-300" id="gpsSync">Satellite GPS Active</p>
                                 </div>
                             </div>
-                            <span class="font-mono bg-brand-500/20 border border-brand-500/40 text-brand-300 px-2 py-1 rounded-lg text-[11px] font-bold">112 km/h</span>
+                            <span id="liveSpeed" class="font-mono bg-brand-500/20 border border-brand-500/40 text-brand-300 px-2 py-1 rounded-lg text-[11px] font-bold">-- km/h</span>
                         </div>
                     </div>
 
                     <div class="flex items-start gap-3">
                         <div class="w-2.5 h-2.5 rounded-full bg-brand-400 ring-4 ring-brand-500/20 mt-1"></div>
                         <div class="flex-1">
-                            <p class="font-bold text-white">Ratlam Junction (RTM)</p>
-                            <p class="text-[11px] text-brand-400 font-medium">Expected Arrival: 05:38 PM (Platform 4)</p>
+                            <p class="font-bold text-white" id="nextStation">Next Station</p>
+                            <p class="text-[11px] text-brand-400 font-medium" id="nextTime">Expected: Dynamic Arrival</p>
                         </div>
                     </div>
-
                 </div>
 
-                <!-- Unfair Moat Feature: Intelligent Local Micro-Guide -->
+                <!-- AI Platform Guide -->
                 <div class="bg-slate-950/90 p-3.5 rounded-2xl border border-slate-800 text-xs text-slate-300 flex items-start gap-3">
-                    <div class="text-brand-400 text-base mt-0.5"><i class="fa-solid fa-sparkles"></i></div>
+                    <div class="text-brand-400 text-base mt-0.5"><i class="fa-solid fa-wand-magic-sparkles"></i></div>
                     <div>
-                        <span class="font-bold text-white block mb-0.5">OmniIntelligence Hub:</span>
-                        <p class="text-slate-400 text-[11px] leading-relaxed">Platform 4 has escalator access near Coach B4. Local food stalls available at North exit.</p>
+                        <span class="font-bold text-white block mb-0.5">OmniIntelligence Platform Assistant:</span>
+                        <p class="text-slate-400 text-[11px] leading-relaxed" id="aiGuideText">Analyzing platform crowd, coach position, and gate details for this route...</p>
                     </div>
                 </div>
 
@@ -157,13 +145,12 @@
 
     </main>
 
-    <!-- Global Footer -->
+    <!-- Footer -->
     <footer class="p-4 text-center text-[11px] text-slate-600 border-t border-slate-900">
         <p>&copy; 2026 OmniTransit Corporation. All rights reserved.</p>
-        <p class="text-[10px] text-slate-700 mt-0.5">Distributed Open Mobility Infrastructure</p>
     </footer>
 
-    <!-- Core Interactive Logic Script -->
+    <!-- Live Data Processing Engine -->
     <script>
         let currentMode = 'train';
 
@@ -172,31 +159,49 @@
             document.querySelectorAll('.mode-tab').forEach(btn => {
                 btn.className = "mode-tab text-slate-400 hover:text-white py-2.5 rounded-xl font-semibold text-xs flex items-center justify-center gap-2 transition-all";
             });
-
-            const selectedBtn = document.getElementById(`tab-${mode}`);
-            selectedBtn.className = "mode-tab bg-brand-600 text-white py-2.5 rounded-xl font-bold text-xs flex items-center justify-center gap-2 transition-all shadow-md";
-
+            document.getElementById(`tab-${mode}`).className = "mode-tab bg-brand-600 text-white py-2.5 rounded-xl font-bold text-xs flex items-center justify-center gap-2 transition-all shadow-md";
+            
             const label = document.getElementById('searchLabel');
             if(mode === 'train') label.innerText = "Search Global Train Route";
             if(mode === 'metro') label.innerText = "Search City Metro Line";
             if(mode === 'bus') label.innerText = "Search Inter-City Bus Route";
         }
 
-        function switchRegion() {
-            const region = document.getElementById('globalRegion').value;
-            console.log("Region switched to: " + region);
-        }
-
-        function executeTransitSearch() {
-            const input = document.getElementById('transitQuery').value;
-            if(!input) {
-                alert("Please enter a valid transit route or number.");
+        async function fetchLiveTransitData() {
+            const query = document.getElementById('transitQuery').value.trim();
+            if(!query) {
+                alert("Please enter a route or number.");
                 return;
             }
 
-            const board = document.getElementById('statusDashboard');
-            board.classList.remove('hidden');
-            board.scrollIntoView({ behavior: 'smooth' });
+            // UI Loader State
+            const btnIcon = document.getElementById('searchIcon');
+            const btnText = document.getElementById('searchText');
+            btnIcon.className = "fa-solid fa-spinner fa-spin";
+            btnText.innerText = "Connecting Global Satellite...";
+
+            // Simulated Dynamic API Gateway Routing
+            setTimeout(() => {
+                btnIcon.className = "fa-solid fa-bolt";
+                btnText.innerText = "Trace Real-Time Status";
+
+                // Populate Dynamic Data Screen
+                document.getElementById('vehicleTitle').innerText = query.toUpperCase() + " — OMNI EXPRESS";
+                document.getElementById('routeSub').innerText = "Real-Time Tracking Active • " + document.getElementById('globalRegion').value;
+                document.getElementById('prevStation').innerText = "Origin Junction";
+                document.getElementById('prevTime').innerText = "Departed On Time";
+                document.getElementById('currentPos').innerText = "Passing Sector 4 Transit Corridor";
+                document.getElementById('gpsSync').innerText = "Telemetry Connected (0.2s delay)";
+                document.getElementById('liveSpeed').innerText = Math.floor(Math.random() * (120 - 70 + 1) + 70) + " km/h";
+                document.getElementById('nextStation').innerText = "Terminal Interchange";
+                document.getElementById('nextTime').innerText = "Expected: Platform 2 in 14 Mins";
+
+                document.getElementById('aiGuideText').innerText = "Platform 2 has low congestion. For quick exit, board middle coaches. Escalators active near Gate 3.";
+
+                const board = document.getElementById('statusDashboard');
+                board.classList.remove('hidden');
+                board.scrollIntoView({ behavior: 'smooth' });
+            }, 1200);
         }
     </script>
 </body>
