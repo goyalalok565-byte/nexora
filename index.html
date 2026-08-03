@@ -1,266 +1,203 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="dark">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NEXORA - All-in-One Daily Tools Platform</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>OmniTransit — Unified Global Mobility Engine</title>
+    <!-- Tailwind CSS Engine -->
     <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        brand: { 50: '#f0f3ff', 500: '#6366f1', 600: '#4f46e5', 700: '#4338ca', 900: '#312e81' },
+                        darkbg: '#090d16',
+                        cardbg: '#111827'
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- FontAwesome Pro Icons & Fonts -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #090d16; -webkit-tap-highlight-color: transparent; }
+        .glass-panel { background: rgba(17, 24, 39, 0.7); backdrop-filter: blur(16px); border: 1px solid rgba(255, 255, 255, 0.08); }
+        .pulse-ring { box-shadow: 0 0 0 0 rgba(99, 102, 241, 0.7); animation: pulse-animation 1.8s infinite cubic-bezier(0.66, 0, 0, 1); }
+        @keyframes pulse-animation { 70% { box-shadow: 0 0 0 10px rgba(99, 102, 241, 0); } 100% { box-shadow: 0 0 0 0 rgba(99, 102, 241, 0); } }
+    </style>
 </head>
-<body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col justify-between selection:bg-blue-500 selection:text-white">
+<body class="text-slate-100 min-h-screen flex flex-col justify-between selection:bg-brand-500 selection:text-white">
 
-    <!-- Header -->
-    <header class="w-full border-b border-slate-900 px-6 py-4 flex justify-between items-center bg-slate-950/80 backdrop-blur sticky top-0 z-50">
-        <div class="flex items-center space-x-2">
-            <a href="#" onclick="goHome()" class="text-xl font-black bg-gradient-to-r from-blue-400 to-indigo-500 bg-clip-text text-transparent">NEXORA</a>
+    <!-- Global App Bar -->
+    <header class="sticky top-0 z-50 glass-panel border-b border-slate-800/80 px-4 py-3 flex justify-between items-center">
+        <div class="flex items-center gap-3">
+            <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-brand-600 to-indigo-400 flex items-center justify-center text-white shadow-lg shadow-brand-500/30">
+                <i class="fa-solid fa-compass-drafting text-lg"></i>
+            </div>
+            <div>
+                <div class="flex items-center gap-1.5">
+                    <h1 class="text-base font-extrabold tracking-tight text-white leading-none">OmniTransit</h1>
+                    <span class="text-[9px] bg-brand-500/20 text-brand-400 font-bold px-1.5 py-0.5 rounded border border-brand-500/30 uppercase">Global</span>
+                </div>
+                <p class="text-[10px] text-slate-400 font-medium">Next-Gen Mobility Engine</p>
+            </div>
         </div>
-        <div class="text-xs text-slate-400 bg-slate-900 px-3 py-1.5 rounded-full border border-slate-800">
-            ⚡ Live & Interactive
+
+        <div class="flex items-center gap-2">
+            <!-- Region Selector -->
+            <select id="globalRegion" onchange="switchRegion()" class="bg-slate-900 border border-slate-700/80 text-xs rounded-xl px-2.5 py-1.5 text-slate-200 focus:outline-none focus:border-brand-500 transition-colors">
+                <option value="IN">🇮🇳 India (IR/Metros)</option>
+                <option value="US">🇺🇸 USA (Amtrak/MTA)</option>
+                <option value="UK">🇬🇧 UK (National Rail)</option>
+                <option value="JP">🇯🇵 Japan (JR/Shinkansen)</option>
+            </select>
         </div>
     </header>
 
-    <!-- Main Container -->
-    <main class="max-w-3xl w-full mx-auto px-4 py-12 flex-grow flex flex-col items-center justify-center text-center">
-        
-        <!-- Home View -->
-        <div id="homeView" class="w-full flex flex-col items-center">
-            <h1 class="text-4xl md:text-6xl font-extrabold tracking-tight mb-4 bg-gradient-to-r from-blue-400 via-indigo-300 to-indigo-500 bg-clip-text text-transparent">
-                Mere saare daily kaam ek hi jagah.
-            </h1>
-            <p class="text-slate-400 mb-8 text-sm md:text-base max-w-lg">
-                Instant calculators and smart utilities—no login required, lightning fast.
-            </p>
+    <!-- Main Dynamic Workspace -->
+    <main class="p-4 max-w-lg mx-auto w-full flex-grow flex flex-col gap-5">
 
-            <!-- Universal Search Bar -->
-            <div class="relative w-full shadow-2xl">
-                <input 
-                    type="text" 
-                    id="searchBox" 
-                    placeholder="Search any tool (e.g., emi, gst, age, tax)..." 
-                    class="w-full px-6 py-4 bg-slate-900 border border-slate-800 rounded-2xl text-slate-100 placeholder-slate-500 focus:outline-none focus:border-blue-500 text-sm md:text-base transition-all"
-                    onkeyup="filterTools()"
-                >
+        <!-- Mode Switcher Tabs -->
+        <section class="glass-panel p-1.5 rounded-2xl grid grid-cols-3 gap-1">
+            <button onclick="selectMode('train')" id="tab-train" class="mode-tab bg-brand-600 text-white py-2.5 rounded-xl font-bold text-xs flex items-center justify-center gap-2 transition-all shadow-md">
+                <i class="fa-solid fa-train"></i> Trains
+            </button>
+            <button onclick="selectMode('metro')" id="tab-metro" class="mode-tab text-slate-400 hover:text-white py-2.5 rounded-xl font-semibold text-xs flex items-center justify-center gap-2 transition-all">
+                <i class="fa-solid fa-train-subway"></i> Metro
+            </button>
+            <button onclick="selectMode('bus')" id="tab-bus" class="mode-tab text-slate-400 hover:text-white py-2.5 rounded-xl font-semibold text-xs flex items-center justify-center gap-2 transition-all">
+                <i class="fa-solid fa-bus"></i> Bus Engine
+            </button>
+        </section>
+
+        <!-- Search & Discovery Console -->
+        <section class="glass-panel p-5 rounded-3xl space-y-4">
+            <div>
+                <label class="text-[11px] font-bold text-slate-400 uppercase tracking-wider block mb-2" id="searchLabel">Search Global Train Route</label>
+                <div class="relative">
+                    <i class="fa-solid fa-magnifying-glass absolute left-4 top-3.5 text-slate-500 text-sm"></i>
+                    <input type="text" id="transitQuery" placeholder="e.g. 12951, Rajdhani, or Station Code" class="w-full bg-slate-950/80 border border-slate-800 rounded-2xl py-3 pl-11 pr-4 text-sm text-white placeholder-slate-600 focus:outline-none focus:border-brand-500 focus:ring-1 focus:ring-brand-500 transition-all">
+                </div>
             </div>
 
-            <!-- Dynamic Search Results -->
-            <div id="resultsBox" class="w-full mt-4 text-left grid grid-cols-1 gap-2"></div>
+            <button onclick="executeTransitSearch()" class="w-full bg-gradient-to-r from-brand-600 to-brand-500 hover:from-brand-500 hover:to-brand-600 active:scale-[0.98] text-white font-bold py-3.5 rounded-2xl text-sm shadow-xl shadow-brand-500/25 flex justify-center items-center gap-2 transition-all">
+                <i class="fa-solid fa-bolt"></i> Trace Real-Time Status
+            </button>
+        </section>
 
-            <!-- Popular Categories -->
-            <div class="flex flex-wrap justify-center gap-2 mt-8">
-                <button onclick="quickSearch('finance')" class="px-3 py-1.5 bg-slate-900 hover:bg-slate-800 border border-slate-800 rounded-full text-xs text-slate-300 transition-all">💰 Finance</button>
-                <button onclick="quickSearch('calculator')" class="px-3 py-1.5 bg-slate-900 hover:bg-slate-800 border border-slate-800 rounded-full text-xs text-slate-300 transition-all">🧮 Calculators</button>
+        <!-- Dynamic Transit Status Dashboard -->
+        <section id="statusDashboard" class="hidden space-y-4">
+            
+            <!-- Live Vehicle Card -->
+            <div class="glass-panel p-5 rounded-3xl space-y-4 border-l-4 border-l-brand-500">
+                <div class="flex justify-between items-start border-b border-slate-800/80 pb-3">
+                    <div>
+                        <div class="flex items-center gap-2">
+                            <h2 id="vehicleTitle" class="font-extrabold text-base text-white">12951 — NDLS TEJAS RAJDHANI</h2>
+                        </div>
+                        <p id="routeSub" class="text-xs text-slate-400 mt-0.5">New Delhi (NDLS) ➔ Mumbai Central (MMCT)</p>
+                    </div>
+                    <span id="delayBadge" class="bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 text-[10px] font-bold px-2.5 py-1 rounded-full flex items-center gap-1">
+                        <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-ping"></span> ON TIME
+                    </span>
+                </div>
+
+                <!-- Timeline Monitor -->
+                <div class="space-y-4 text-xs relative pt-1">
+                    
+                    <div class="flex items-start gap-3">
+                        <div class="w-2.5 h-2.5 rounded-full bg-slate-600 mt-1"></div>
+                        <div class="flex-1">
+                            <p class="font-bold text-slate-300">Kota Junction (KOTA)</p>
+                            <p class="text-[11px] text-slate-500">Departed at 03:15 PM • Dep. Delay: +0m</p>
+                        </div>
+                    </div>
+
+                    <!-- Live Active Segment -->
+                    <div class="ml-1 pl-5 border-l-2 border-dashed border-brand-500 my-2 py-2">
+                        <div class="bg-brand-900/30 border border-brand-500/30 p-3 rounded-2xl flex items-center justify-between text-brand-200 shadow-inner">
+                            <div class="flex items-center gap-2.5">
+                                <span class="w-3 h-3 rounded-full bg-brand-500 pulse-ring flex justify-center items-center">
+                                    <span class="w-1.5 h-1.5 bg-white rounded-full"></span>
+                                </span>
+                                <div>
+                                    <p class="font-bold text-white text-xs">Between Kota & Ratlam</p>
+                                    <p class="text-[10px] text-brand-300">Near Nagda Jn • GPS Synchronized</p>
+                                </div>
+                            </div>
+                            <span class="font-mono bg-brand-500/20 border border-brand-500/40 text-brand-300 px-2 py-1 rounded-lg text-[11px] font-bold">112 km/h</span>
+                        </div>
+                    </div>
+
+                    <div class="flex items-start gap-3">
+                        <div class="w-2.5 h-2.5 rounded-full bg-brand-400 ring-4 ring-brand-500/20 mt-1"></div>
+                        <div class="flex-1">
+                            <p class="font-bold text-white">Ratlam Junction (RTM)</p>
+                            <p class="text-[11px] text-brand-400 font-medium">Expected Arrival: 05:38 PM (Platform 4)</p>
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- Unfair Moat Feature: Intelligent Local Micro-Guide -->
+                <div class="bg-slate-950/90 p-3.5 rounded-2xl border border-slate-800 text-xs text-slate-300 flex items-start gap-3">
+                    <div class="text-brand-400 text-base mt-0.5"><i class="fa-solid fa-sparkles"></i></div>
+                    <div>
+                        <span class="font-bold text-white block mb-0.5">OmniIntelligence Hub:</span>
+                        <p class="text-slate-400 text-[11px] leading-relaxed">Platform 4 has escalator access near Coach B4. Local food stalls available at North exit.</p>
+                    </div>
+                </div>
+
             </div>
-
-            <!-- Tools Grid -->
-            <div class="w-full mt-16 text-left">
-                <h2 class="text-lg font-semibold text-slate-300 mb-4">Available Interactive Tools</h2>
-                <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3" id="toolsGrid"></div>
-            </div>
-        </div>
-
-        <!-- Tool Workspace View (Dynamic Container) -->
-        <div id="workspaceView" class="w-full hidden text-left bg-slate-900/40 border border-slate-800 p-6 md:p-8 rounded-3xl">
-            <button onclick="goHome()" class="mb-6 px-4 py-2 bg-slate-800 hover:bg-slate-700 text-xs rounded-xl text-slate-300 transition-all">&larr; Back to Tools</button>
-            <div id="toolContent"></div>
-        </div>
+        </section>
 
     </main>
 
-    <!-- Footer -->
-    <footer class="py-6 text-center text-xs text-slate-500 border-t border-slate-900">
-        &copy; 2026 NEXORA &bull; Built for the World &bull; Fast & Secure.
+    <!-- Global Footer -->
+    <footer class="p-4 text-center text-[11px] text-slate-600 border-t border-slate-900">
+        <p>&copy; 2026 OmniTransit Corporation. All rights reserved.</p>
+        <p class="text-[10px] text-slate-700 mt-0.5">Distributed Open Mobility Infrastructure</p>
     </footer>
 
-    <!-- App Logic Script -->
+    <!-- Core Interactive Logic Script -->
     <script>
-        const toolsDatabase = [
-            { id: "emi", name: "Loan EMI Calculator", category: "Finance", desc: "Calculate monthly loan payments & interest" },
-            { id: "gst", name: "GST Calculator", category: "Finance", desc: "Calculate GST amount and net price instantly" },
-            { id: "age", name: "Age Calculator", category: "Calculator", desc: "Calculate exact age in years, months, and days" }
-        ];
+        let currentMode = 'train';
 
-        function renderGrid(data) {
-            let grid = document.getElementById('toolsGrid');
-            grid.innerHTML = "";
-            data.forEach(tool => {
-                let card = document.createElement('div');
-                card.onclick = () => openTool(tool.id);
-                card.className = "p-4 bg-slate-900/60 hover:bg-slate-900 border border-slate-800/80 rounded-2xl transition-all cursor-pointer group";
-                card.innerHTML = `
-                    <div class="flex justify-between items-start mb-2">
-                        <span class="text-sm font-medium text-slate-200 group-hover:text-blue-400 transition-colors">${tool.name}</span>
-                        <span class="text-[10px] bg-slate-800 text-slate-400 px-2 py-0.5 rounded-full">${tool.category}</span>
-                    </div>
-                    <p class="text-xs text-slate-500">${tool.desc}</p>
-                `;
-                grid.appendChild(card);
+        function selectMode(mode) {
+            currentMode = mode;
+            document.querySelectorAll('.mode-tab').forEach(btn => {
+                btn.className = "mode-tab text-slate-400 hover:text-white py-2.5 rounded-xl font-semibold text-xs flex items-center justify-center gap-2 transition-all";
             });
+
+            const selectedBtn = document.getElementById(`tab-${mode}`);
+            selectedBtn.className = "mode-tab bg-brand-600 text-white py-2.5 rounded-xl font-bold text-xs flex items-center justify-center gap-2 transition-all shadow-md";
+
+            const label = document.getElementById('searchLabel');
+            if(mode === 'train') label.innerText = "Search Global Train Route";
+            if(mode === 'metro') label.innerText = "Search City Metro Line";
+            if(mode === 'bus') label.innerText = "Search Inter-City Bus Route";
         }
 
-        function filterTools() {
-            let input = document.getElementById('searchBox').value.toLowerCase();
-            let resultsBox = document.getElementById('resultsBox');
-            resultsBox.innerHTML = "";
+        function switchRegion() {
+            const region = document.getElementById('globalRegion').value;
+            console.log("Region switched to: " + region);
+        }
 
-            if (input.trim() === "") {
-                renderGrid(toolsDatabase);
+        function executeTransitSearch() {
+            const input = document.getElementById('transitQuery').value;
+            if(!input) {
+                alert("Please enter a valid transit route or number.");
                 return;
             }
 
-            let filtered = toolsDatabase.filter(tool => 
-                tool.name.toLowerCase().includes(input) || tool.category.toLowerCase().includes(input) || tool.desc.toLowerCase().includes(input)
-            );
-
-            renderGrid(filtered);
+            const board = document.getElementById('statusDashboard');
+            board.classList.remove('hidden');
+            board.scrollIntoView({ behavior: 'smooth' });
         }
-
-        function quickSearch(keyword) {
-            document.getElementById('searchBox').value = keyword;
-            filterTools();
-        }
-
-        function goHome() {
-            document.getElementById('homeView').classList.remove('hidden');
-            document.getElementById('workspaceView').classList.add('hidden');
-            renderGrid(toolsDatabase);
-        }
-
-        function openTool(id) {
-            document.getElementById('homeView').classList.add('hidden');
-            document.getElementById('workspaceView').classList.remove('hidden');
-            let content = document.getElementById('toolContent');
-
-            if (id === 'emi') {
-                content.innerHTML = `
-                    <h2 class="text-2xl font-bold text-slate-100 mb-2">Loan EMI Calculator</h2>
-                    <p class="text-xs text-slate-400 mb-6">Calculate your monthly loan installments easily.</p>
-                    <div class="space-y-4 max-w-lg">
-                        <div>
-                            <label class="block text-xs text-slate-400 mb-1">Loan Amount (₹)</label>
-                            <input type="number" id="emiLoan" value="500000" class="w-full p-3 bg-slate-950 border border-slate-800 rounded-xl text-slate-100 focus:outline-none focus:border-blue-500 text-sm">
-                        </div>
-                        <div>
-                            <label class="block text-xs text-slate-400 mb-1">Interest Rate (% P.A.)</label>
-                            <input type="number" id="emiRate" value="8.5" class="w-full p-3 bg-slate-950 border border-slate-800 rounded-xl text-slate-100 focus:outline-none focus:border-blue-500 text-sm">
-                        </div>
-                        <div>
-                            <label class="block text-xs text-slate-400 mb-1">Loan Tenure (Years)</label>
-                            <input type="number" id="emiYears" value="5" class="w-full p-3 bg-slate-950 border border-slate-800 rounded-xl text-slate-100 focus:outline-none focus:border-blue-500 text-sm">
-                        </div>
-                        <button onclick="calculateEMI()" class="w-full py-3 bg-blue-600 hover:bg-blue-500 text-white rounded-xl font-medium transition-all text-sm">Calculate EMI</button>
-                        <div id="emiResult" class="mt-4 p-4 bg-slate-950 border border-slate-800 rounded-xl text-sm hidden"></div>
-                    </div>
-                `;
-            } else if (id === 'gst') {
-                content.innerHTML = `
-                    <h2 class="text-2xl font-bold text-slate-100 mb-2">GST Calculator</h2>
-                    <p class="text-xs text-slate-400 mb-6">Calculate GST inclusive and exclusive amounts.</p>
-                    <div class="space-y-4 max-w-lg">
-                        <div>
-                            <label class="block text-xs text-slate-400 mb-1">Initial Amount (₹)</label>
-                            <input type="number" id="gstAmount" value="1000" class="w-full p-3 bg-slate-950 border border-slate-800 rounded-xl text-slate-100 focus:outline-none focus:border-blue-500 text-sm">
-                        </div>
-                        <div>
-                            <label class="block text-xs text-slate-400 mb-1">GST Rate (%)</label>
-                            <input type="number" id="gstRate" value="18" class="w-full p-3 bg-slate-950 border border-slate-800 rounded-xl text-slate-100 focus:outline-none focus:border-blue-500 text-sm">
-                        </div>
-                        <button onclick="calculateGST()" class="w-full py-3 bg-blue-600 hover:bg-blue-500 text-white rounded-xl font-medium transition-all text-sm">Calculate GST</button>
-                        <div id="gstResult" class="mt-4 p-4 bg-slate-950 border border-slate-800 rounded-xl text-sm hidden"></div>
-                    </div>
-                `;
-            } else if (id === 'age') {
-                content.innerHTML = `
-                    <h2 class="text-2xl font-bold text-slate-100 mb-2">Age Calculator</h2>
-                    <p class="text-xs text-slate-400 mb-6">Find your exact age from date of birth.</p>
-                    <div class="space-y-4 max-w-lg">
-                        <div>
-                            <label class="block text-xs text-slate-400 mb-1">Date of Birth</label>
-                            <input type="date" id="dobInput" class="w-full p-3 bg-slate-950 border border-slate-800 rounded-xl text-slate-100 focus:outline-none focus:border-blue-500 text-sm">
-                        </div>
-                        <button onclick="calculateAge()" class="w-full py-3 bg-blue-600 hover:bg-blue-500 text-white rounded-xl font-medium transition-all text-sm">Calculate Age</button>
-                        <div id="ageResult" class="mt-4 p-4 bg-slate-950 border border-slate-800 rounded-xl text-sm hidden"></div>
-                    </div>
-                `;
-            }
-        }
-
-        function calculateEMI() {
-            let p = parseFloat(document.getElementById('emiLoan').value);
-            let r = parseFloat(document.getElementById('emiRate').value) / 12 / 100;
-            let n = parseFloat(document.getElementById('emiYears').value) * 12;
-            let resBox = document.getElementById('emiResult');
-
-            if (isNaN(p) || isNaN(r) || isNaN(n)) {
-                resBox.innerHTML = "Please enter valid numbers.";
-                resBox.classList.remove('hidden');
-                return;
-            }
-
-            let emi = (p * r * Math.pow(1 + r, n)) / (Math.pow(1 + r, n) - 1);
-            let totalPay = emi * n;
-            let totalInt = totalPay - p;
-
-            resBox.innerHTML = `
-                <div class="space-y-1 text-slate-300">
-                    <div>Monthly EMI: <strong class="text-blue-400">₹${emi.toFixed(2)}</strong></div>
-                    <div>Total Interest: <strong class="text-slate-100">₹${totalInt.toFixed(2)}</strong></div>
-                    <div>Total Payment: <strong class="text-slate-100">₹${totalPay.toFixed(2)}</strong></div>
-                </div>
-            `;
-            resBox.classList.remove('hidden');
-        }
-
-        function calculateGST() {
-            let amount = parseFloat(document.getElementById('gstAmount').value);
-            let rate = parseFloat(document.getElementById('gstRate').value);
-            let resBox = document.getElementById('gstResult');
-
-            if (isNaN(amount) || isNaN(rate)) {
-                resBox.innerHTML = "Please enter valid numbers.";
-                resBox.classList.remove('hidden');
-                return;
-            }
-
-            let gstAmount = (amount * rate) / 100;
-            let totalAmount = amount + gstAmount;
-
-            resBox.innerHTML = `
-                <div class="space-y-1 text-slate-300">
-                    <div>GST Amount: <strong class="text-blue-400">₹${gstAmount.toFixed(2)}</strong></div>
-                    <div>Total Amount (Inc. GST): <strong class="text-slate-100">₹${totalAmount.toFixed(2)}</strong></div>
-                </div>
-            `;
-            resBox.classList.remove('hidden');
-        }
-
-        function calculateAge() {
-            let dob = new Date(document.getElementById('dobInput').value);
-            let resBox = document.getElementById('ageResult');
-            let today = new Date();
-
-            if (isNaN(dob.getTime())) {
-                resBox.innerHTML = "Please select a valid date.";
-                resBox.classList.remove('hidden');
-                return;
-            }
-
-            let years = today.getFullYear() - dob.getFullYear();
-            let months = today.getMonth() - dob.getMonth();
-            let days = today.getDate() - dob.getDate();
-
-            if (days < 0) {
-                months--;
-                days += new Date(today.getFullYear(), today.getMonth(), 0).getDate();
-            }
-            if (months < 0) {
-                years--;
-                months += 12;
-            }
-
-            resBox.innerHTML = `<strong class="text-blue-400">${years} Years, ${months} Months, and ${days} Days</strong> old`;
-            resBox.classList.remove('hidden');
-        }
-
-        renderGrid(toolsDatabase);
     </script>
 </body>
 </html>
