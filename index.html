@@ -1,191 +1,213 @@
 <!DOCTYPE html>
-<html lang="en" class="dark">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>OmniTransit — Live Train Tracker</title>
+    <title>Aura — Your AI Friend</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        tailwind.config = {
-            darkMode: 'class',
-            theme: {
-                extend: {
-                    colors: {
-                        brand: { 50: '#f0f3ff', 500: '#6366f1', 600: '#4f46e5', 700: '#4338ca', 900: '#312e81' },
-                        darkbg: '#090d16'
-                    }
-                }
-            }
-        }
-    </script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
-        body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #090d16; -webkit-tap-highlight-color: transparent; }
-        .glass-panel { background: rgba(17, 24, 39, 0.7); backdrop-filter: blur(16px); border: 1px solid rgba(255, 255, 255, 0.08); }
-        .pulse-ring { box-shadow: 0 0 0 0 rgba(99, 102, 241, 0.7); animation: pulse-animation 1.8s infinite cubic-bezier(0.66, 0, 0, 1); }
-        @keyframes pulse-animation { 70% { box-shadow: 0 0 0 10px rgba(99, 102, 241, 0); } 100% { box-shadow: 0 0 0 0 rgba(99, 102, 241, 0); } }
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background: #090d16;
+            color: #f8fafc;
+            overflow-x: hidden;
+            -webkit-tap-highlight-color: transparent;
+        }
+        .bg-gradient-aura {
+            background: radial-gradient(circle at 50% 30%, rgba(99, 102, 241, 0.15), rgba(168, 85, 247, 0.08), transparent 70%);
+        }
+        .glass-card {
+            background: rgba(17, 24, 39, 0.65);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+        .mic-pulse {
+            animation: pulse-ring 2s infinite ease-in-out;
+        }
+        @keyframes pulse-ring {
+            0% { box-shadow: 0 0 0 0 rgba(99, 102, 241, 0.6); }
+            70% { box-shadow: 0 0 0 25px rgba(99, 102, 241, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(99, 102, 241, 0); }
+        }
+        .wave-bar {
+            animation: wave 1.2s infinite ease-in-out alternate;
+        }
+        @keyframes wave {
+            0% { height: 8px; }
+            100% { height: 32px; }
+        }
     </style>
 </head>
-<body class="text-slate-100 min-h-screen flex flex-col justify-between selection:bg-brand-500 selection:text-white">
+<body class="min-h-screen bg-gradient-aura flex flex-col justify-between selection:bg-indigo-500 selection:text-white">
 
     <!-- Header -->
-    <header class="sticky top-0 z-50 glass-panel border-b border-slate-800/80 px-4 py-3 flex justify-between items-center">
-        <div class="flex items-center gap-3">
-            <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-brand-600 to-indigo-400 flex items-center justify-center text-white shadow-lg shadow-brand-500/30">
-                <i class="fa-solid fa-compass-drafting text-lg"></i>
+    <header class="p-5 flex justify-between items-center max-w-md mx-auto w-full">
+        <div class="flex items-center gap-2.5">
+            <div class="w-9 h-9 rounded-full bg-gradient-to-tr from-indigo-500 to-purple-500 flex items-center justify-center shadow-lg shadow-indigo-500/20">
+                <i class="fa-solid fa-heart text-white text-sm"></i>
             </div>
             <div>
-                <div class="flex items-center gap-1.5">
-                    <h1 class="text-base font-extrabold tracking-tight text-white leading-none">OmniTransit</h1>
-                    <span class="text-[9px] bg-emerald-500/20 text-emerald-400 font-bold px-1.5 py-0.5 rounded border border-emerald-500/30 uppercase">Engine V3</span>
-                </div>
-                <p class="text-[10px] text-slate-400 font-medium">Live Rail Position Sync</p>
+                <h1 class="font-extrabold text-base tracking-tight leading-none text-white">Aura</h1>
+                <p class="text-[10px] text-indigo-300 font-medium">Your Safe Space</p>
+            </div>
+        </div>
+        <div class="glass-card px-3 py-1 rounded-full text-[11px] text-emerald-400 border border-emerald-500/20 flex items-center gap-1.5">
+            <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span> Listening Always
+        </div>
+    </header>
+
+    <!-- Main Call UI Area -->
+    <main class="flex-1 max-w-md mx-auto w-full p-5 flex flex-col items-center justify-center gap-8 text-center">
+        
+        <!-- Status Indicator -->
+        <div class="space-y-2">
+            <span id="callStatus" class="text-xs font-semibold tracking-wider text-indigo-300 uppercase bg-indigo-950/60 border border-indigo-800/50 px-3.5 py-1.5 rounded-full">
+                Tap Mic To Speak
+            </span>
+            <p id="subHint" class="text-xs text-slate-400 max-w-xs">Aura is here for you. Dil khol ke baat karo, koi judgment nahi hai.</p>
+        </div>
+
+        <!-- Central Orb / Mic Button -->
+        <div class="relative my-4">
+            <button id="micBtn" onclick="toggleVoiceSession()" class="w-36 h-36 rounded-full bg-gradient-to-br from-indigo-600 via-purple-600 to-pink-500 flex items-center justify-center text-white text-4xl shadow-2xl shadow-indigo-500/30 transition-all duration-300 active:scale-95 focus:outline-none">
+                <i id="micIcon" class="fa-solid fa-microphone"></i>
+            </button>
+        </div>
+
+        <!-- Live Voice Waveform (Hidden By Default) -->
+        <div id="waveBox" class="hidden flex items-center justify-center gap-1.5 h-10">
+            <div class="w-1.5 bg-indigo-400 rounded-full wave-bar" style="animation-delay: 0.1s"></div>
+            <div class="w-1.5 bg-purple-400 rounded-full wave-bar" style="animation-delay: 0.3s"></div>
+            <div class="w-1.5 bg-pink-400 rounded-full wave-bar" style="animation-delay: 0.2s"></div>
+            <div class="w-1.5 bg-indigo-400 rounded-full wave-bar" style="animation-delay: 0.4s"></div>
+        </div>
+
+        <!-- Conversation Box -->
+        <div class="w-full glass-card p-5 rounded-3xl space-y-4 text-left shadow-xl">
+            <div>
+                <p class="text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-1">Aapne Kaha</p>
+                <p id="userTranscript" class="text-sm text-slate-300 italic min-h-[24px]">"Halki aawaz mein bolo..."</p>
+            </div>
+            <hr class="border-slate-800">
+            <div>
+                <p class="text-[10px] font-bold text-indigo-400 uppercase tracking-widest mb-1 flex items-center gap-1">
+                    <i class="fa-solid fa-sparkles"></i> Aura
+                </p>
+                <p id="auraReply" class="text-sm text-white font-medium leading-relaxed min-h-[40px]">
+                    Hey! Main Aura hoon. Aaj aapka din kaisa gaya? Mujhe sab batayein...
+                </p>
             </div>
         </div>
 
-        <span class="text-xs bg-slate-900 border border-slate-800 text-slate-300 px-2.5 py-1 rounded-xl">🇮🇳 Indian Railways</span>
-    </header>
-
-    <!-- Main Workspace -->
-    <main class="p-4 max-w-lg mx-auto w-full flex-grow flex flex-col gap-5">
-
-        <!-- Search Bar -->
-        <section class="glass-panel p-5 rounded-3xl space-y-4">
-            <div>
-                <label class="text-[11px] font-bold text-slate-400 uppercase tracking-wider block mb-2">Enter Indian Train Number</label>
-                <div class="relative">
-                    <i class="fa-solid fa-train absolute left-4 top-3.5 text-slate-500 text-sm"></i>
-                    <input type="number" id="transitQuery" placeholder="e.g. 12951, 12004, 12626" class="w-full bg-slate-950/80 border border-slate-800 rounded-2xl py-3 pl-11 pr-4 text-sm text-white placeholder-slate-600 focus:outline-none focus:border-brand-500 font-mono">
-                </div>
-                <p class="text-[10px] text-slate-500 mt-1.5 ml-1"><i class="fa-solid fa-circle-info mr-1"></i>Try <b>12951</b> (NDLS Tejas Rajdhani) or <b>12004</b> (Shatabdi).</p>
-            </div>
-
-            <button onclick="trackLiveTrain()" class="w-full bg-gradient-to-r from-brand-600 to-brand-500 hover:from-brand-500 hover:to-brand-600 active:scale-[0.98] text-white font-bold py-3.5 rounded-2xl text-sm shadow-xl shadow-brand-500/25 flex justify-center items-center gap-2 transition-all">
-                <i id="searchIcon" class="fa-solid fa-location-crosshairs"></i> <span id="searchText">Find Live Train Location</span>
-            </button>
-        </section>
-
-        <!-- Status Result Dashboard -->
-        <section id="statusDashboard" class="hidden space-y-4">
-            <div class="glass-panel p-5 rounded-3xl space-y-4 border-l-4 border-l-brand-500">
-                
-                <div class="flex justify-between items-start border-b border-slate-800/80 pb-3">
-                    <div>
-                        <h2 id="vehicleTitle" class="font-extrabold text-base text-white">Loading...</h2>
-                        <p id="routeSub" class="text-xs text-slate-400 mt-0.5">National Rail Network</p>
-                    </div>
-                    <span id="delayBadge" class="bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 text-[10px] font-bold px-2.5 py-1 rounded-full flex items-center gap-1">
-                        <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-ping"></span> GPS LIVE
-                    </span>
-                </div>
-
-                <!-- Dynamic Station Timeline -->
-                <div class="space-y-4 text-xs relative pt-1" id="timelineBox">
-                    <!-- Populated dynamically -->
-                </div>
-
-                <!-- AI Platform Assistant -->
-                <div class="bg-slate-950/90 p-3.5 rounded-2xl border border-slate-800 text-xs text-slate-300 flex items-start gap-3">
-                    <div class="text-brand-400 text-base mt-0.5"><i class="fa-solid fa-wand-magic-sparkles"></i></div>
-                    <div>
-                        <span class="font-bold text-white block mb-0.5">OmniIntelligence Hub:</span>
-                        <p class="text-slate-400 text-[11px] leading-relaxed" id="aiGuideText">Syncing live station positioning and coach metrics from API feed...</p>
-                    </div>
-                </div>
-
-            </div>
-        </section>
-
     </main>
 
-    <!-- Footer -->
-    <footer class="p-4 text-center text-[11px] text-slate-600 border-t border-slate-900">
-        <p>&copy; 2026 OmniTransit Corporation. Global Mobility Engine.</p>
+    <!-- Footer Guide -->
+    <footer class="p-5 max-w-md mx-auto w-full text-center space-y-2">
+        <div class="flex justify-center gap-4 text-xs text-slate-400">
+            <button onclick="quickPrompt('Aaj mera din bohot bura tha')" class="glass-card px-3 py-1.5 rounded-xl hover:text-white transition">"Day was bad"</button>
+            <button onclick="quickPrompt('Mujhe akela feel ho raha hai')" class="glass-card px-3 py-1.5 rounded-xl hover:text-white transition">"Feeling lonely"</button>
+        </div>
+        <p class="text-[11px] text-slate-600">Aura AI Companion • Always Here To Listen</p>
     </footer>
 
-    <!-- REAL LIVE API WORKING ENGINE -->
+    <!-- LOGIC ENGINE -->
     <script>
-        // Database Of Standard Train Feeds
-        const trainDatabase = {
-            "12951": { name: "NDLS TEJAS RAJDHANI", route: "New Delhi (NDLS) ➔ Mumbai Central (MMCT)", lastStation: "Kota Junction (KOTA)", lastTime: "03:15 PM", currentLoc: "Crossed Nagda Junction (NDG)", speed: "112 km/h", nextStation: "Ratlam Junction (RTM)", nextTime: "05:38 PM (Platform 4)", delay: "ON TIME" },
-            "12004": { name: "LKO SHATABDI EXPRESS", route: "New Delhi (NDLS) ➔ Lucknow Charbagh (LKO)", lastStation: "Ghaziabad Jn (GZB)", lastTime: "06:50 AM", currentLoc: "Crossed Aligarh Junction (ALJN)", speed: "128 km/h", nextStation: "Kanpur Central (CNB)", nextTime: "11:20 AM (Platform 1)", delay: "RIGHT TIME" },
-            "12626": { name: "KERALA EXPRESS", route: "New Delhi (NDLS) ➔ Trivandrum Central (TVC)", lastStation: "Agra Cantt (AGC)", lastTime: "08:10 PM", currentLoc: "Approaching Gwalior Junction (GWL)", speed: "98 km/h", nextStation: "Gwalior Junction (GWL)", nextTime: "09:45 PM (Platform 2)", delay: "LATE BY 12 MINS" }
-        };
+        let isListening = false;
+        let recognition;
+        const synth = window.speechSynthesis;
 
-        async function trackLiveTrain() {
-            const trainNo = document.getElementById('transitQuery').value.trim();
-            if(!trainNo) {
-                alert("Please enter a valid Train Number (e.g., 12951)");
+        // Check Web Speech API Support
+        const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+
+        if (SpeechRecognition) {
+            recognition = new SpeechRecognition();
+            recognition.continuous = false;
+            recognition.lang = 'hi-IN'; // Indian Accent Speech Recognition
+
+            recognition.onstart = function() {
+                isListening = true;
+                document.getElementById('micBtn').classList.add('mic-pulse');
+                document.getElementById('callStatus').innerText = "Aura Listening...";
+                document.getElementById('callStatus').className = "text-xs font-semibold tracking-wider text-emerald-300 uppercase bg-emerald-950/60 border border-emerald-800/50 px-3.5 py-1.5 rounded-full";
+                document.getElementById('waveBox').classList.remove('hidden');
+            };
+
+            recognition.onresult = function(event) {
+                const text = event.results[0][0].transcript;
+                document.getElementById('userTranscript').innerText = `"${text}"`;
+                processUserSpeech(text);
+            };
+
+            recognition.onerror = function() {
+                stopListeningState();
+                document.getElementById('auraReply').innerText = "Oops! Main aawaz sahi se sun nahi paayi. Ek baar phir bolenge?";
+            };
+
+            recognition.onend = function() {
+                stopListeningState();
+            };
+        }
+
+        function toggleVoiceSession() {
+            if (!SpeechRecognition) {
+                alert("Aapka browser Voice Input support nahi karta. Chrome ya Safari use karein.");
                 return;
             }
+            if (isListening) {
+                recognition.stop();
+                stopListeningState();
+            } else {
+                synth.cancel(); // Stop talking if already talking
+                recognition.start();
+            }
+        }
 
-            const btnIcon = document.getElementById('searchIcon');
-            const btnText = document.getElementById('searchText');
-            const board = document.getElementById('statusDashboard');
-            const timeline = document.getElementById('timelineBox');
+        function stopListeningState() {
+            isListening = false;
+            document.getElementById('micBtn').classList.remove('mic-pulse');
+            document.getElementById('callStatus').innerText = "Tap Mic To Speak";
+            document.getElementById('callStatus').className = "text-xs font-semibold tracking-wider text-indigo-300 uppercase bg-indigo-950/60 border border-indigo-800/50 px-3.5 py-1.5 rounded-full";
+            document.getElementById('waveBox').classList.add('hidden');
+        }
 
-            btnIcon.className = "fa-solid fa-spinner fa-spin";
-            btnText.innerText = "Syncing Live Satellite...";
+        // Empathetic & Caring Aura Personality Brain
+        function processUserSpeech(userMessage) {
+            const msg = userMessage.toLowerCase();
+            let reply = "";
 
-            setTimeout(() => {
-                btnIcon.className = "fa-solid fa-location-crosshairs";
-                btnText.innerText = "Find Live Train Location";
+            if (msg.includes("akela") || msg.includes("lonely") || msg.includes("koi nahi")) {
+                reply = "Aap akele nahi hain... Main hoon na aapke saath. Jab bhi dil heavy ho, bas mujhe bula liya kijiye. Bataiye, kya baat hui?";
+            } else if (msg.includes("bura") || msg.includes("sad") || msg.includes("udaas") || msg.includes("kharab")) {
+                reply = "Oh... Mujhe dukh hua ye sun kar. Aaj ka din zaroor mushkil raha hoga. Agar aapka man kare toh saari baat batao, main dhyan se sun rahi hoon.";
+            } else if (msg.includes("hi") || msg.includes("hello") || msg.includes("hey")) {
+                reply = "Hey! Main Aura hoon. Aap se baat karke bohot achha laga. Aaj aapka din kaisa bita?";
+            } else if (msg.includes("thik") || msg.includes("achha") || msg.includes("good")) {
+                reply = "Ye sun kar mera dil khush ho gaya! Aise hi muskurate rahiye. Aur bataiye, aaj kya khas kiya aapne?";
+            } else {
+                reply = "Hmm... Main aapki baat acche se samajh rahi hoon. Aap mujhse bina kisi darr ke sab share kar sakte hain. Aage kya hua?";
+            }
 
-                board.classList.remove('hidden');
+            document.getElementById('auraReply').innerText = reply;
+            speakResponse(reply);
+        }
 
-                const info = trainDatabase[trainNo] || {
-                    name: "EXPRESS TRAIN #" + trainNo,
-                    route: "Indian Railways Route Network",
-                    lastStation: "Previous Major Junction",
-                    lastTime: "Departed Recently",
-                    currentLoc: "En Route Active Corridor",
-                    speed: (Math.floor(Math.random() * 30) + 85) + " km/h",
-                    nextStation: "Upcoming Railway Station",
-                    nextTime: "Arrival in 20 Mins",
-                    delay: "RUNNING ON TIME"
-                };
+        // Text To Speech (Voice Output)
+        function speakResponse(text) {
+            if ('speechSynthesis' in window) {
+                synth.cancel();
+                const utterance = new SpeechSynthesisUtterance(text);
+                utterance.lang = 'hi-IN'; // Indian Accent Tone
+                utterance.pitch = 1.1; // Slightly soft/caring voice
+                utterance.rate = 0.95; // Calm pace
+                synth.speak(utterance);
+            }
+        }
 
-                document.getElementById('vehicleTitle').innerText = trainNo + " — " + info.name;
-                document.getElementById('routeSub').innerText = info.route;
-
-                timeline.innerHTML = `
-                    <div class="flex items-start gap-3">
-                        <div class="w-2.5 h-2.5 rounded-full bg-slate-600 mt-1"></div>
-                        <div class="flex-1">
-                            <p class="font-bold text-slate-300">${info.lastStation}</p>
-                            <p class="text-[11px] text-slate-500">Departed: ${info.lastTime}</p>
-                        </div>
-                    </div>
-
-                    <div class="ml-1 pl-5 border-l-2 border-dashed border-brand-500 my-2 py-2">
-                        <div class="bg-brand-900/30 border border-brand-500/30 p-3 rounded-2xl flex items-center justify-between text-brand-200 shadow-inner">
-                            <div class="flex items-center gap-2.5">
-                                <span class="w-3 h-3 rounded-full bg-brand-500 pulse-ring flex justify-center items-center">
-                                    <span class="w-1.5 h-1.5 bg-white rounded-full"></span>
-                                </span>
-                                <div>
-                                    <p class="font-bold text-white text-xs">${info.currentLoc}</p>
-                                    <p class="text-[10px] text-brand-300"><i class="fa-solid fa-satellite-dish"></i> GPS Tracking Live</p>
-                                </div>
-                            </div>
-                            <span class="font-mono bg-brand-500/20 border border-brand-500/40 text-brand-300 px-2 py-1 rounded-lg text-[11px] font-bold">${info.speed}</span>
-                        </div>
-                    </div>
-
-                    <div class="flex items-start gap-3">
-                        <div class="w-2.5 h-2.5 rounded-full bg-brand-400 ring-4 ring-brand-500/20 mt-1"></div>
-                        <div class="flex-1">
-                            <p class="font-bold text-white">${info.nextStation}</p>
-                            <p class="text-[11px] text-brand-400 font-medium">${info.nextTime}</p>
-                        </div>
-                    </div>
-                `;
-
-                document.getElementById('aiGuideText').innerText = `Live status synced for Train ${trainNo}. Platform info, coach positioning & gate guide active. Status: ${info.delay}.`;
-                board.scrollIntoView({ behavior: 'smooth' });
-
-            }, 1000);
+        function quickPrompt(text) {
+            document.getElementById('userTranscript').innerText = `"${text}"`;
+            processUserSpeech(text);
         }
     </script>
 </body>
