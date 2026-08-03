@@ -8,42 +8,20 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
-        body {
-            font-family: 'Plus Jakarta Sans', sans-serif;
-            background: #090d16;
-            color: #f8fafc;
-            overflow-x: hidden;
-            -webkit-tap-highlight-color: transparent;
-        }
-        .bg-gradient-aura {
-            background: radial-gradient(circle at 50% 30%, rgba(99, 102, 241, 0.15), rgba(168, 85, 247, 0.08), transparent 70%);
-        }
-        .glass-card {
-            background: rgba(17, 24, 39, 0.65);
-            backdrop-filter: blur(20px);
-            border: 1px solid rgba(255, 255, 255, 0.08);
-        }
-        .mic-pulse {
-            animation: pulse-ring 2s infinite ease-in-out;
-        }
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background: #090d16; color: #f8fafc; }
+        .glass-card { background: rgba(17, 24, 39, 0.7); backdrop-filter: blur(20px); border: 1px solid rgba(255, 255, 255, 0.08); }
+        .mic-pulse { animation: pulse-ring 2s infinite ease-in-out; }
         @keyframes pulse-ring {
             0% { box-shadow: 0 0 0 0 rgba(99, 102, 241, 0.6); }
             70% { box-shadow: 0 0 0 25px rgba(99, 102, 241, 0); }
             100% { box-shadow: 0 0 0 0 rgba(99, 102, 241, 0); }
         }
-        .wave-bar {
-            animation: wave 1.2s infinite ease-in-out alternate;
-        }
-        @keyframes wave {
-            0% { height: 8px; }
-            100% { height: 32px; }
-        }
     </style>
 </head>
-<body class="min-h-screen bg-gradient-aura flex flex-col justify-between selection:bg-indigo-500 selection:text-white">
+<body class="min-h-screen flex flex-col justify-between selection:bg-indigo-500 selection:text-white p-4">
 
     <!-- Header -->
-    <header class="p-5 flex justify-between items-center max-w-md mx-auto w-full">
+    <header class="p-3 flex justify-between items-center max-w-md mx-auto w-full">
         <div class="flex items-center gap-2.5">
             <div class="w-9 h-9 rounded-full bg-gradient-to-tr from-indigo-500 to-purple-500 flex items-center justify-center shadow-lg shadow-indigo-500/20">
                 <i class="fa-solid fa-heart text-white text-sm"></i>
@@ -53,63 +31,56 @@
                 <p class="text-[10px] text-indigo-300 font-medium">Your Safe Space</p>
             </div>
         </div>
-        <div class="glass-card px-3 py-1 rounded-full text-[11px] text-emerald-400 border border-emerald-500/20 flex items-center gap-1.5">
-            <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span> Listening Always
-        </div>
+        <span class="glass-card px-3 py-1 rounded-full text-[10px] text-emerald-400 border border-emerald-500/20 flex items-center gap-1.5">
+            <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span> Active
+        </span>
     </header>
 
     <!-- Main Call UI Area -->
-    <main class="flex-1 max-w-md mx-auto w-full p-5 flex flex-col items-center justify-center gap-8 text-center">
+    <main class="flex-1 max-w-md mx-auto w-full flex flex-col items-center justify-center gap-6 text-center my-4">
         
-        <!-- Status Indicator -->
-        <div class="space-y-2">
+        <div class="space-y-1">
             <span id="callStatus" class="text-xs font-semibold tracking-wider text-indigo-300 uppercase bg-indigo-950/60 border border-indigo-800/50 px-3.5 py-1.5 rounded-full">
-                Tap Mic To Speak
+                Tap Mic or Type Below
             </span>
-            <p id="subHint" class="text-xs text-slate-400 max-w-xs">Aura is here for you. Dil khol ke baat karo, koi judgment nahi hai.</p>
         </div>
 
         <!-- Central Orb / Mic Button -->
-        <div class="relative my-4">
-            <button id="micBtn" onclick="toggleVoiceSession()" class="w-36 h-36 rounded-full bg-gradient-to-br from-indigo-600 via-purple-600 to-pink-500 flex items-center justify-center text-white text-4xl shadow-2xl shadow-indigo-500/30 transition-all duration-300 active:scale-95 focus:outline-none">
+        <div class="relative my-2">
+            <button id="micBtn" onclick="toggleVoiceSession()" class="w-32 h-32 rounded-full bg-gradient-to-br from-indigo-600 via-purple-600 to-pink-500 flex items-center justify-center text-white text-3xl shadow-2xl shadow-indigo-500/30 transition-all duration-300 active:scale-95">
                 <i id="micIcon" class="fa-solid fa-microphone"></i>
             </button>
         </div>
 
-        <!-- Live Voice Waveform (Hidden By Default) -->
-        <div id="waveBox" class="hidden flex items-center justify-center gap-1.5 h-10">
-            <div class="w-1.5 bg-indigo-400 rounded-full wave-bar" style="animation-delay: 0.1s"></div>
-            <div class="w-1.5 bg-purple-400 rounded-full wave-bar" style="animation-delay: 0.3s"></div>
-            <div class="w-1.5 bg-pink-400 rounded-full wave-bar" style="animation-delay: 0.2s"></div>
-            <div class="w-1.5 bg-indigo-400 rounded-full wave-bar" style="animation-delay: 0.4s"></div>
-        </div>
-
         <!-- Conversation Box -->
-        <div class="w-full glass-card p-5 rounded-3xl space-y-4 text-left shadow-xl">
+        <div class="w-full glass-card p-4 rounded-3xl space-y-3 text-left shadow-xl">
             <div>
-                <p class="text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-1">Aapne Kaha</p>
-                <p id="userTranscript" class="text-sm text-slate-300 italic min-h-[24px]">"Halki aawaz mein bolo..."</p>
+                <p class="text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-0.5">Aapne Kaha</p>
+                <p id="userTranscript" class="text-xs text-slate-300 italic min-h-[20px]">"Tap mic to speak or type..."</p>
             </div>
             <hr class="border-slate-800">
             <div>
-                <p class="text-[10px] font-bold text-indigo-400 uppercase tracking-widest mb-1 flex items-center gap-1">
+                <p class="text-[10px] font-bold text-indigo-400 uppercase tracking-widest mb-0.5 flex items-center gap-1">
                     <i class="fa-solid fa-sparkles"></i> Aura
                 </p>
-                <p id="auraReply" class="text-sm text-white font-medium leading-relaxed min-h-[40px]">
-                    Hey! Main Aura hoon. Aaj aapka din kaisa gaya? Mujhe sab batayein...
+                <p id="auraReply" class="text-xs text-white font-medium leading-relaxed min-h-[36px]">
+                    Hey! Main Aura hoon. Aaj aapka din kaisa gaya?
                 </p>
             </div>
+        </div>
+
+        <!-- Text Input Fallback (Always Works) -->
+        <div class="w-full flex gap-2">
+            <input type="text" id="textInput" placeholder="Aura se yahan bhi baat kar sakte hain..." class="flex-1 bg-slate-900 border border-slate-800 rounded-2xl px-4 py-3 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-indigo-500">
+            <button onclick="sendTextMessage()" class="bg-indigo-600 hover:bg-indigo-500 text-white px-4 py-3 rounded-2xl text-xs font-bold transition">
+                <i class="fa-solid fa-paper-plane"></i>
+            </button>
         </div>
 
     </main>
 
-    <!-- Footer Guide -->
-    <footer class="p-5 max-w-md mx-auto w-full text-center space-y-2">
-        <div class="flex justify-center gap-4 text-xs text-slate-400">
-            <button onclick="quickPrompt('Aaj mera din bohot bura tha')" class="glass-card px-3 py-1.5 rounded-xl hover:text-white transition">"Day was bad"</button>
-            <button onclick="quickPrompt('Mujhe akela feel ho raha hai')" class="glass-card px-3 py-1.5 rounded-xl hover:text-white transition">"Feeling lonely"</button>
-        </div>
-        <p class="text-[11px] text-slate-600">Aura AI Companion • Always Here To Listen</p>
+    <footer class="text-center text-[11px] text-slate-600">
+        Aura AI Companion • Always Here To Listen
     </footer>
 
     <!-- LOGIC ENGINE -->
@@ -118,20 +89,17 @@
         let recognition;
         const synth = window.speechSynthesis;
 
-        // Check Web Speech API Support
         const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
 
         if (SpeechRecognition) {
             recognition = new SpeechRecognition();
             recognition.continuous = false;
-            recognition.lang = 'hi-IN'; // Indian Accent Speech Recognition
+            recognition.lang = 'hi-IN';
 
             recognition.onstart = function() {
                 isListening = true;
                 document.getElementById('micBtn').classList.add('mic-pulse');
                 document.getElementById('callStatus').innerText = "Aura Listening...";
-                document.getElementById('callStatus').className = "text-xs font-semibold tracking-wider text-emerald-300 uppercase bg-emerald-950/60 border border-emerald-800/50 px-3.5 py-1.5 rounded-full";
-                document.getElementById('waveBox').classList.remove('hidden');
             };
 
             recognition.onresult = function(event) {
@@ -140,9 +108,9 @@
                 processUserSpeech(text);
             };
 
-            recognition.onerror = function() {
+            recognition.onerror = function(e) {
                 stopListeningState();
-                document.getElementById('auraReply').innerText = "Oops! Main aawaz sahi se sun nahi paayi. Ek baar phir bolenge?";
+                console.log("Speech error:", e);
             };
 
             recognition.onend = function() {
@@ -152,15 +120,19 @@
 
         function toggleVoiceSession() {
             if (!SpeechRecognition) {
-                alert("Aapka browser Voice Input support nahi karta. Chrome ya Safari use karein.");
+                alert("Voice recognition blocked. Please type in the text box below.");
                 return;
             }
             if (isListening) {
                 recognition.stop();
                 stopListeningState();
             } else {
-                synth.cancel(); // Stop talking if already talking
-                recognition.start();
+                try {
+                    synth.cancel();
+                    recognition.start();
+                } catch(err) {
+                    console.log(err);
+                }
             }
         }
 
@@ -168,11 +140,23 @@
             isListening = false;
             document.getElementById('micBtn').classList.remove('mic-pulse');
             document.getElementById('callStatus').innerText = "Tap Mic To Speak";
-            document.getElementById('callStatus').className = "text-xs font-semibold tracking-wider text-indigo-300 uppercase bg-indigo-950/60 border border-indigo-800/50 px-3.5 py-1.5 rounded-full";
-            document.getElementById('waveBox').classList.add('hidden');
         }
 
-        // Empathetic & Caring Aura Personality Brain
+        function sendTextMessage() {
+            const input = document.getElementById('textInput');
+            const text = input.value.trim();
+            if(text) {
+                document.getElementById('userTranscript').innerText = `"${text}"`;
+                processUserSpeech(text);
+                input.value = '';
+            }
+        }
+
+        // Enter Key Listener
+        document.getElementById('textInput').addEventListener('keypress', function (e) {
+            if (e.key === 'Enter') sendTextMessage();
+        });
+
         function processUserSpeech(userMessage) {
             const msg = userMessage.toLowerCase();
             let reply = "";
@@ -183,8 +167,6 @@
                 reply = "Oh... Mujhe dukh hua ye sun kar. Aaj ka din zaroor mushkil raha hoga. Agar aapka man kare toh saari baat batao, main dhyan se sun rahi hoon.";
             } else if (msg.includes("hi") || msg.includes("hello") || msg.includes("hey")) {
                 reply = "Hey! Main Aura hoon. Aap se baat karke bohot achha laga. Aaj aapka din kaisa bita?";
-            } else if (msg.includes("thik") || msg.includes("achha") || msg.includes("good")) {
-                reply = "Ye sun kar mera dil khush ho gaya! Aise hi muskurate rahiye. Aur bataiye, aaj kya khas kiya aapne?";
             } else {
                 reply = "Hmm... Main aapki baat acche se samajh rahi hoon. Aap mujhse bina kisi darr ke sab share kar sakte hain. Aage kya hua?";
             }
@@ -193,21 +175,15 @@
             speakResponse(reply);
         }
 
-        // Text To Speech (Voice Output)
         function speakResponse(text) {
             if ('speechSynthesis' in window) {
                 synth.cancel();
                 const utterance = new SpeechSynthesisUtterance(text);
-                utterance.lang = 'hi-IN'; // Indian Accent Tone
-                utterance.pitch = 1.1; // Slightly soft/caring voice
-                utterance.rate = 0.95; // Calm pace
+                utterance.lang = 'hi-IN';
+                utterance.pitch = 1.1;
+                utterance.rate = 0.95;
                 synth.speak(utterance);
             }
-        }
-
-        function quickPrompt(text) {
-            document.getElementById('userTranscript').innerText = `"${text}"`;
-            processUserSpeech(text);
         }
     </script>
 </body>
